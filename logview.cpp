@@ -1,0 +1,21 @@
+#include "logview.h"
+#include "ui_logview.h"
+#include "logmodel.h"
+
+logView::logView(QWidget *parent) :
+    QDialog(parent),
+    ui(new Ui::logView)
+{
+    ui->setupUi(this);
+    logModel *logs = new logModel();
+    ui->tableLog->setModel(&logs->log_mod);
+    ui->tableLog->resizeColumnsToContents();
+    ui->tableLog->setColumnHidden(logs->log_mod.fieldIndex("id"), true);
+    ui->tableLog->setItemDelegate(new QSqlRelationalDelegate(ui->tableLog));
+    connect(ui->clearButton, SIGNAL(clicked()), logs, SLOT(clearLog()));
+}
+
+logView::~logView()
+{
+    delete ui;
+}
